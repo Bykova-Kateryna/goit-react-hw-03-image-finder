@@ -1,6 +1,5 @@
 import { Component } from 'react';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
-import PropTypes from 'prop-types';
 import { SearchbarContainer, SearchbarForm, SearchbarFormBtn, SearchbarFormBtnImg, SearchbarInput } from './Searchbar.styled'
 
 
