@@ -1,10 +1,9 @@
-import { Vortex } from 'react-loader-spinner'
-import { LoaderSection } from './Loader.styled'
-;
+import { Vortex } from 'react-loader-spinner';
+import { LoaderSection } from './Loader.styled';
 export const Loader = () => {
-    return (
-        <LoaderSection>
-        <Vortex
+  return (
+    <LoaderSection>
+      <Vortex
         visible={true}
         height="80"
         width="80"
@@ -13,6 +12,6 @@ export const Loader = () => {
         wrapperClass="vortex-wrapper"
         colors={['red', 'green', 'blue', 'yellow', 'orange', 'purple']}
       />
-      </LoaderSection>
-      )
-  };
+    </LoaderSection>
+  );
+};
