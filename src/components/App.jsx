@@ -13,7 +13,6 @@ const API_KEY = '29159880-83bd8f09217c4813e14c9607d';
 const PER_PAGE = 12;
 const URL = 'https://pixabay.com/api/';
 let page = 1;
-let totalResult = 0;
 
 export class App extends Component {
   state = {
