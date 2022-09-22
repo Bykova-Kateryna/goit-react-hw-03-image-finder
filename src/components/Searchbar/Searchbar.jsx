@@ -21,7 +21,7 @@ export class Searchbar extends Component {
   handleSubmitSearchInfo = event => {
     event.preventDefault();
     if (this.state.search.trim() === '') {
-      Notify.failure('Please enter the search field');
+      Notify.failure('Please enter the search field.');
       return;
     }
     this.props.onSubmit(this.state.search);

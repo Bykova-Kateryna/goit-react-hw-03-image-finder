@@ -38,5 +38,5 @@ export class Modal extends Component {
 
 Modal.propTypes = {
   onClose: PropTypes.func,
-  children: PropTypes.elementType,
+  children: PropTypes.node,
 };

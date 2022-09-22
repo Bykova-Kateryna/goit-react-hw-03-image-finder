@@ -8,7 +8,7 @@ export const ImageGalleryItem = ({ array, openModal }) => {
   if (array) {
     return (
       <>
-        {array.hits.map(item => (
+        {array.map(item => (
           <ImageGalleryItemSection
             key={item.id}
             onClick={() => {
@@ -24,6 +24,6 @@ export const ImageGalleryItem = ({ array, openModal }) => {
 };
 
 ImageGalleryItem.propTypes = {
-  array: PropTypes.object,
+  array: PropTypes.array,
   openModal: PropTypes.func,
 };
