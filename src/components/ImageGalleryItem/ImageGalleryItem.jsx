@@ -4,26 +4,29 @@ import {
   ImageGalleryItemImg,
 } from './ImageGalleryItem.styled';
 
-export const ImageGalleryItem = ({ array, openModal }) => {
-  if (array) {
-    return (
-      <>
-        {array.map(item => (
-          <ImageGalleryItemSection
-            key={item.id}
-            onClick={() => {
-              openModal(item.largeImageURL);
-            }}
-          >
-            <ImageGalleryItemImg src={item.webformatURL} alt={item.tags} />
-          </ImageGalleryItemSection>
-        ))}
-      </>
-    );
-  }
+export const ImageGalleryItem = ({
+  id,
+  imageItem,
+  description,
+  modalImage,
+  openModal,
+}) => {
+  return (
+    <ImageGalleryItemSection
+      key={id}
+      onClick={() => {
+        openModal(modalImage);
+      }}
+    >
+      <ImageGalleryItemImg src={imageItem} alt={description} />
+    </ImageGalleryItemSection>
+  );
 };
 
 ImageGalleryItem.propTypes = {
-  array: PropTypes.array,
-  openModal: PropTypes.func,
+  id: PropTypes.number.isRequired,
+  imageItem: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+  modalImage: PropTypes.string.isRequired,
+  openModal: PropTypes.func.isRequired,
 };

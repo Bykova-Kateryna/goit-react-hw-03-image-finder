@@ -12,16 +12,17 @@ import { Report } from 'notiflix/build/notiflix-report-aio';
 const API_KEY = '29159880-83bd8f09217c4813e14c9607d';
 const PER_PAGE = 12;
 const URL = 'https://pixabay.com/api/';
-let page = 1;
 
 export class App extends Component {
   state = {
     search: '',
-    items: null,
+    items: [],
     loading: false,
     modalShow: false,
     modalImg: null,
     loadeMore: false,
+    page: 1,
+    totalResult: 0,
   };
 
   showModal = img => {
@@ -33,11 +34,17 @@ export class App extends Component {
   };
 
   handleSubmit = info => {
-    this.setState({ search: info });
+    if (info === this.state.search) {
+      Report.info('FINDER INFO', 'Please enter a new request.', 'Okay');
+      return;
+    } else {
+      this.setState({ search: info, page: 1, items: [] });
+    }
   };
+
   handleRequest = () => {
     fetch(
-      `${URL}?q=${this.state.search}&page=${page}&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=${PER_PAGE}`
+      `${URL}?q=${this.state.search}&page=${this.state.page}&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=${PER_PAGE}`
     )
       .then(response => response.json())
       .then(items => {
@@ -50,42 +57,42 @@ export class App extends Component {
         } else if (items.total <= PER_PAGE) {
           this.setState({ items: items.hits });
         } else {
-          this.setState({ items: items.hits, loadeMore: true });
+          this.setState(prevState => {
+            return {
+              items: [...prevState.items, ...items.hits],
+              loadeMore: true,
+              totalResult: items.total,
+            };
+          });
+          if (
+            items.hits.length < 12 ||
+            this.state.totalResult / this.state.page === PER_PAGE
+          ) {
+            this.setState({ loadeMore: false });
+          }
         }
       })
       .finally(() => {
         this.setState({ loading: false });
       });
   };
+
   hendleLoadeMore = () => {
-    page += 1;
-    this.setState({ loading: true });
-    fetch(
-      `${URL}?q=${this.state.search}&page=${page}&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=${PER_PAGE}`
-    )
-      .then(response => response.json())
-      .then(data => {
-        console.log('data', data.hits.length);
-        if (data.hits.length < PER_PAGE) {
-          this.setState(prevState => ({
-            items: [...prevState.items, ...data.hits],
-            loadeMore: false,
-            loading: false,
-          }));
-        } else {
-          this.setState(prevState => ({
-            items: [...prevState.items, ...data.hits],
-            loading: false,
-          }));
-        }
-      });
+    this.setState(({ page }) => {
+      return { page: page + 1 };
+    });
   };
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevState.search !== this.state.search) {
-      page = 1;
+    if (
+      prevState.page !== this.state.page ||
+      prevState.search !== this.state.search
+    ) {
       this.setState({ loading: true });
       this.handleRequest();
+      if (this.state.totalResult / this.state.page === PER_PAGE) {
+        return this.setState({ loadeMore: false });
+      }
     }
   }
 
@@ -96,10 +103,18 @@ export class App extends Component {
         <Searchbar onSubmit={this.handleSubmit} />
 
         <ImageGallery>
-          <ImageGalleryItem
-            array={this.state.items}
-            openModal={this.showModal}
-          />
+          {this.state.items.map(item => {
+            return (
+              <ImageGalleryItem
+                id={item.id}
+                imageItem={item.webformatURL}
+                description={item.tags}
+                openModal={this.showModal}
+                modalImage={item.largeImageURL}
+                key={item.id}
+              />
+            );
+          })}
         </ImageGallery>
         {this.state.loading && <Loader />}
         {this.state.loadeMore && (
